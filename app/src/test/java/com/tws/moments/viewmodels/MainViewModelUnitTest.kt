@@ -4,12 +4,14 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.tws.moments.api.MomentRepository
 import io.mockk.coEvery
 import io.mockk.mockk
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.TestDispatcher
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
 import org.junit.*
 import org.junit.rules.TestRule
-import java.util.concurrent.Executors
 
 
 @ExperimentalCoroutinesApi
@@ -18,7 +20,7 @@ class MainViewModelUnitTest {
     @Rule @JvmField
     var rule: TestRule = InstantTaskExecutorRule()
 
-    private val mainThreadSurrogate = Executors.newSingleThreadExecutor().asCoroutineDispatcher()
+    private val mainThreadSurrogate: TestDispatcher = UnconfinedTestDispatcher()
 
     @Before
     fun setUp() {
@@ -28,7 +30,6 @@ class MainViewModelUnitTest {
     @After
     fun tearDown() {
         Dispatchers.resetMain()
-        mainThreadSurrogate.close()
     }
 
     @Test
