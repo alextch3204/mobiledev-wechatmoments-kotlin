@@ -1,6 +1,5 @@
 package com.tws.moments.viewmodels
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -12,7 +11,7 @@ import kotlin.math.min
 
 private const val TAG = "MainViewModel##"
 
-private const val PAGE_TWEET_COUNT = 5
+private const val PAGE_TWEET_COUNT = 10
 
 class MainViewModel(private val repository: MomentRepository) : ViewModel() {
 

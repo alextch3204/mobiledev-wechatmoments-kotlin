@@ -8,8 +8,10 @@ import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.tws.moments.adapters.MomentsAdapter
+import com.tws.moments.adapters.HeaderAdapter
+import com.tws.moments.adapters.TweetsAdapter
 import com.tws.moments.api.MomentRepository
 import com.tws.moments.databinding.ActivityMainBinding
 import com.tws.moments.utils.ScreenAdaptiveUtil
@@ -29,7 +31,9 @@ class MainActivity : AppCompatActivity() {
         MainViewModelFactory(repository)
     }
 
-    private val adapter = MomentsAdapter()
+    private val headerAdapter = HeaderAdapter()
+    private val tweetsAdapter = TweetsAdapter()
+    private val adapter = ConcatAdapter(headerAdapter, tweetsAdapter)
 
     private var reqPageIndex = 1
 
@@ -55,7 +59,7 @@ class MainActivity : AppCompatActivity() {
             )
         )
 
-        binding.recyclerView.adapter = this.adapter
+        binding.recyclerView.adapter = adapter
 
         binding.swipeRefreshLayout.isRefreshing = true
         binding.swipeRefreshLayout.setOnRefreshListener {
@@ -69,7 +73,7 @@ class MainActivity : AppCompatActivity() {
                     Log.i(TAG, "internal load more")
                     viewModel.loadMoreTweets(reqPageIndex) {
                         reqPageIndex++
-                        adapter.addMoreTweet(it)
+                        tweetsAdapter.addMoreTweet(it)
                     }
                 }
             }
@@ -78,13 +82,13 @@ class MainActivity : AppCompatActivity() {
 
     private fun subscribe() {
         viewModel.userBean.observe(this, Observer {
-            adapter.userBean = it
+            headerAdapter.userBean = it
         })
 
         viewModel.tweets.observe(this, Observer {
             binding.swipeRefreshLayout.isRefreshing = false
             reqPageIndex = 1
-            adapter.tweets = it.toMutableList()
+            tweetsAdapter.tweets = it.toMutableList()
         })
     }
 
