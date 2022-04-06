@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion 30
@@ -29,6 +30,7 @@ android {
     }
     buildFeatures {
         viewBinding true
+        dataBinding true
     }
     testOptions {
         unitTests.includeAndroidResources = true
