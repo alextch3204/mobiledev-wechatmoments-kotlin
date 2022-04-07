@@ -3,11 +3,9 @@ package com.tws.moments
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.tws.moments.adapters.HeaderAdapter
@@ -34,8 +32,6 @@ class MainActivity : AppCompatActivity() {
     private val headerAdapter = HeaderAdapter()
     private val tweetsAdapter = TweetsAdapter()
     private val adapter = ConcatAdapter(headerAdapter, tweetsAdapter)
-
-    private var reqPageIndex = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,28 +64,20 @@ class MainActivity : AppCompatActivity() {
 
         binding.recyclerView.addOnScrollListener(object : LoadMoreListener() {
             override fun onLoadMore() {
-                Log.i(TAG, "load more reqPageIndex:$reqPageIndex,pageCount:${viewModel.pageCount}")
-                if (reqPageIndex <= viewModel.pageCount - 1) {
-                    Log.i(TAG, "internal load more")
-                    viewModel.loadMoreTweets(reqPageIndex) {
-                        reqPageIndex++
-                        tweetsAdapter.addMoreTweet(it)
-                    }
-                }
+                viewModel.onLoadMore()
             }
         })
     }
 
     private fun subscribe() {
-        viewModel.userBean.observe(this, Observer {
+        viewModel.userBean.observe(this) {
             headerAdapter.userBean = it
-        })
+        }
 
-        viewModel.tweets.observe(this, Observer {
+        viewModel.tweets.observe(this) { list ->
             binding.swipeRefreshLayout.isRefreshing = false
-            reqPageIndex = 1
-            tweetsAdapter.tweets = it.toMutableList()
-        })
+            tweetsAdapter.submitList(list)
+        }
     }
 
     private fun initWindow() {

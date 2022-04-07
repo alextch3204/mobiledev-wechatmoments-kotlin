@@ -8,8 +8,8 @@ import com.tws.moments.TWApplication
 import com.tws.moments.adapters.CommentsAdapter
 import com.tws.moments.adapters.ImagesAdapter
 import com.tws.moments.api.entry.ImagesBean
-import com.tws.moments.api.entry.TweetBean
 import com.tws.moments.databinding.LayoutBaseTweetBinding
+import com.tws.moments.items.TweetItem
 import com.tws.moments.utils.dip
 import com.tws.moments.views.itemdecoration.ImagesDecoration
 import com.tws.moments.views.itemdecoration.MarginItemDecoration
@@ -27,7 +27,8 @@ class TweetViewHolder(private val binding: LayoutBaseTweetBinding) :
     private lateinit var imagesAdapter: ImagesAdapter
     private lateinit var commentsAdapter: CommentsAdapter
     private var imageLoader = TWApplication.imageLoader
-    fun bind(tweet: TweetBean) {
+
+    fun bind(tweet: TweetItem) {
         renderTextContent(tweet.content)
     }
 
